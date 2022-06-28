@@ -13,7 +13,6 @@ public class Listener {
     private Long id;
     private String name;
     private Integer age;
-
     // later we will add genre and user
 
 
