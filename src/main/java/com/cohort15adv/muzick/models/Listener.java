@@ -1,5 +1,6 @@
 package com.cohort15adv.muzick.models;
 
+import com.cohort15adv.muzick.payloads.ApiResponse.Article;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ public class Listener {
     private Integer age;
     // later we will add genre and user
 
+
     @OneToMany(mappedBy = "listener", fetch = FetchType.LAZY) // match the variable name in the Entity class
     @JsonIgnore
     private Set<Note> notes;
@@ -28,13 +30,13 @@ public class Listener {
         this.age = age;
     }
 
-    public Set<Note> getNotes() {
-        return notes;
-    }
-
-    public void setNotes(Set<Note> notes) {
-        this.notes = notes;
-    }
+//    public Set<Note> getNotes() {
+//        return notes;
+//    }
+//
+//    public void setNotes(Set<Note> notes) {
+//        this.notes = notes;
+//    }
 
     public Long getId() {
         return id;
