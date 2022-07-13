@@ -1,7 +1,9 @@
 package com.cohort15adv.muzick.controllers;
 
 import com.cohort15adv.muzick.models.Listener;
+import com.cohort15adv.muzick.models.User;
 import com.cohort15adv.muzick.repositories.ListenerRepository;
+import com.cohort15adv.muzick.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,9 @@ public class ListenerController {
     @Autowired
     private ListenerRepository listenerRepository;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/test")
     public ResponseEntity<?> testRoute() {
         return new ResponseEntity<>("Hello World", HttpStatus.OK);
@@ -31,6 +36,15 @@ public class ListenerController {
 
     @PostMapping("/")
     public ResponseEntity<Listener> createListener(@RequestBody Listener newListener) {
+
+        User currentUser = userService.getCurrentUser();
+
+        if (currentUser == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        newListener.setUser(currentUser);
+
         Listener listener = listenerRepository.save(newListener);
 
         return new ResponseEntity<>(listener, HttpStatus.CREATED);

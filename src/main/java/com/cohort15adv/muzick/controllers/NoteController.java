@@ -2,8 +2,10 @@ package com.cohort15adv.muzick.controllers;
 
 import com.cohort15adv.muzick.models.Listener;
 import com.cohort15adv.muzick.models.Note;
+import com.cohort15adv.muzick.models.User;
 import com.cohort15adv.muzick.repositories.ListenerRepository;
 import com.cohort15adv.muzick.repositories.NoteRepository;
+import com.cohort15adv.muzick.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +25,25 @@ public class NoteController {
     @Autowired
     private ListenerRepository listenerRepository;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/test")
     public ResponseEntity<?> testRoute() {
         return new ResponseEntity<>("note route", HttpStatus.OK);
     }
 
-    @PostMapping("/{listenerId}")
-    public ResponseEntity<?> createNote(@PathVariable Long listenerId, @RequestBody Note newNote) {
+    @PostMapping("/")
+    public ResponseEntity<?> createNote(@RequestBody Note newNote) {
+
+        User currentUser = userService.getCurrentUser();
+
+        if (currentUser == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
         // TODO get listener id from authentication token
-        Listener listener = listenerRepository.findById(listenerId).orElseThrow(
+        Listener listener = listenerRepository.findByUser_Id(currentUser.getId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
         );
 

@@ -16,6 +16,11 @@ public class Listener {
     private Integer age;
     // later we will add genre and user
 
+    @OneToOne
+    @JoinColumn(name="users_id", referencedColumnName = "id")
+    @JsonIgnore
+    private User user;
+
 
     @OneToMany(mappedBy = "listener", fetch = FetchType.LAZY) // match the variable name in the Entity class
     @JsonIgnore
@@ -24,10 +29,11 @@ public class Listener {
     public Listener() {
     }
 
-    public Listener(Long id, String name, Integer age) {
+    public Listener(Long id, String name, Integer age, User user) {
         this.id = id;
         this.name = name;
         this.age = age;
+        this.user = user;
     }
 
 //    public Set<Note> getNotes() {
@@ -37,6 +43,15 @@ public class Listener {
 //    public void setNotes(Set<Note> notes) {
 //        this.notes = notes;
 //    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Long getId() {
         return id;
